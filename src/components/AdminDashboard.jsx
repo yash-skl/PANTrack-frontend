@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import Toast from '@/components/ui/Toast';
 import Navbar from './shared/Navbar';
+import { PAN_API_END_POINT } from '@/constants';
 import axios from 'axios';
 
 const AdminDashboard = () => {
@@ -42,7 +43,7 @@ const AdminDashboard = () => {
     const fetchSubmissions = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8000/api/v1/pan/`, {
+            const response = await axios.get(PAN_API_END_POINT, {
                 headers: {
                     'Authorization': `Bearer ${user?.accessToken}`,
                 },
@@ -66,7 +67,7 @@ const AdminDashboard = () => {
     const updateStatus = async (submissionId, newStatus) => {
         try {
             const response = await axios.put(
-                `http://localhost:8000/api/v1/pan/update/${submissionId}`,
+                `${PAN_API_END_POINT}/update/${submissionId}`,
                 { status: newStatus },
                 {
                     headers: {

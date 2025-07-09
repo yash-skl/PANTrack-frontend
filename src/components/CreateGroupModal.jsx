@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Button } from '@/components/ui/button';
 import { X, Users, Search } from 'lucide-react';
+import { CHAT_API_END_POINT } from '@/constants';
 import axios from 'axios';
 
 const CreateGroupModal = ({ isOpen, onClose, onGroupCreated }) => {
@@ -18,7 +19,7 @@ const CreateGroupModal = ({ isOpen, onClose, onGroupCreated }) => {
     // Fetch available members
     const fetchAvailableMembers = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/api/v1/chat/members/available', {
+            const response = await axios.get(`${CHAT_API_END_POINT}/members/available`, {
                 headers: {
                     'Authorization': `Bearer ${user?.accessToken}`,
                 },
@@ -43,7 +44,7 @@ const CreateGroupModal = ({ isOpen, onClose, onGroupCreated }) => {
         setLoading(true);
         try {
             const response = await axios.post(
-                'http://localhost:8000/api/v1/chat/groups',
+                `${CHAT_API_END_POINT}/groups`,
                 {
                     name: groupName.trim(),
                     description: groupDescription.trim(),

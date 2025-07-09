@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '@/components/ui/button';
 import { setLogout } from '@/redux/authSlice';
+import { USER_API_END_POINT } from '@/constants';
 import axios from 'axios';
 
 const Navbar = () => {
@@ -12,7 +13,7 @@ const Navbar = () => {
 
     const logoutHandler = async () => {
         try {
-            const response = await axios.get(`http://localhost:8000/api/v1/user/logout`, {
+            const response = await axios.get(`${USER_API_END_POINT}/logout`, {
                 withCredentials: true
             });
 

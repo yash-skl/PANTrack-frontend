@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import Toast from '@/components/ui/Toast';
 import Navbar from './shared/Navbar';
 import CreateGroupModal from './CreateGroupModal';
+import { CHAT_API_END_POINT } from '@/constants';
 import axios from 'axios';
 import { 
     MessageCircle, 
@@ -50,7 +51,7 @@ const Chat = () => {
     const fetchChatGroups = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:8000/api/v1/chat/groups', {
+            const response = await axios.get(`${CHAT_API_END_POINT}/groups`, {
                 headers: {
                     'Authorization': `Bearer ${user?.accessToken}`,
                 },
@@ -72,7 +73,7 @@ const Chat = () => {
     const fetchMessages = async (groupId) => {
         try {
             const response = await axios.get(
-                `http://localhost:8000/api/v1/chat/groups/${groupId}/messages`,
+                `${CHAT_API_END_POINT}/groups/${groupId}/messages`,
                 {
                     headers: {
                         'Authorization': `Bearer ${user?.accessToken}`,
@@ -109,7 +110,7 @@ const Chat = () => {
             } else {
                 // Fallback to HTTP if socket not available
                 await axios.post(
-                    `http://localhost:8000/api/v1/chat/groups/${selectedGroup._id}/messages`,
+                    `${CHAT_API_END_POINT}/groups/${selectedGroup._id}/messages`,
                     { content: messageContent },
                     {
                         headers: {
@@ -151,7 +152,7 @@ const Chat = () => {
                 socket.emit('add_reaction', { messageId, emoji });
             } else {
                 await axios.post(
-                    `http://localhost:8000/api/v1/chat/messages/${messageId}/reactions`,
+                    `${CHAT_API_END_POINT}/messages/${messageId}/reactions`,
                     { emoji },
                     {
                         headers: {

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
+import { SOCKET_URL } from '@/constants';
 
 const SocketContext = createContext();
 
@@ -20,7 +21,7 @@ export const SocketProvider = ({ children }) => {
     useEffect(() => {
         if (user && user.accessToken) {
             // Create socket connection with authentication
-            const newSocket = io('http://localhost:8000', {
+            const newSocket = io(SOCKET_URL, {
                 auth: {
                     token: user.accessToken
                 }

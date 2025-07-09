@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import Toast from '@/components/ui/Toast';
 import Navbar from './shared/Navbar';
 import axios from 'axios';
+import { SUBADMIN_API_END_POINT } from '@/constants';
 
 const SubAdminManagement = () => {
     const [subAdmins, setSubAdmins] = useState([]);
@@ -43,7 +44,7 @@ const SubAdminManagement = () => {
     const fetchSubAdmins = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8000/api/v1/subadmin/`, {
+            const response = await axios.get(SUBADMIN_API_END_POINT, {
                 headers: {
                     'Authorization': `Bearer ${user?.accessToken}`,
                 },
@@ -68,7 +69,7 @@ const SubAdminManagement = () => {
         try {
             setLoading(true);
             const response = await axios.post(
-                `http://localhost:8000/api/v1/subadmin/create`,
+                `${SUBADMIN_API_END_POINT}/create`,
                 formData,
                 {
                     headers: {
@@ -99,7 +100,7 @@ const SubAdminManagement = () => {
         try {
             setLoading(true);
             const response = await axios.put(
-                `http://localhost:8000/api/v1/subadmin/${selectedSubAdmin._id}`,
+                `${SUBADMIN_API_END_POINT}/${selectedSubAdmin._id}`,
                 {
                     name: formData.name,
                     permissions: formData.permissions,
@@ -136,7 +137,7 @@ const SubAdminManagement = () => {
 
         try {
             const response = await axios.delete(
-                `http://localhost:8000/api/v1/subadmin/${id}`,
+                `${SUBADMIN_API_END_POINT}/${id}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${user?.accessToken}`,
