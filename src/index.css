@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fix potential black strip issues */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  overflow-x: hidden;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+}
