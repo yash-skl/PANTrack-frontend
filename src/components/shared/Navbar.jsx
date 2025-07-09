@@ -33,17 +33,23 @@ const Navbar = () => {
             <div className='flex justify-between items-center p-4 mx-auto max-w-7xl h-16'>
                 {/* Logo */}
                 <div>
-                    <Link to='/'>
-                        <Button variant='outline'>
-                            <h1 className='text-2xl font-bold text-yellow-300'>PAN<span className='text-white'>Track</span></h1>
-                        </Button>
-                    </Link>
+                    <Button variant='outline' onClick={() => {
+                        if (user?.role === 'admin') {
+                            navigate('/admin/dashboard');
+                        } else if (user?.role === 'subadmin') {
+                            navigate('/subadmin/dashboard');
+                        } else if (user?.role === 'user') {
+                            navigate('/pan-submission');
+                        } else {
+                            navigate('/');
+                        }
+                    }}>
+                        <h1 className='text-2xl font-bold text-yellow-300'>PAN<span className='text-white'>Track</span></h1>
+                    </Button>
                 </div>
 
                 {/* Navbar Links */}
                 <div className='flex gap-4 items-center'>
-                    <Link to='/' className='text-white hover:text-yellow-300 transition-colors duration-300'>Home</Link>
-                    <button className='text-white hover:text-yellow-300 transition-colors duration-300'>About</button>
                     {user && user.role === 'admin' && (
                         <Link to='/admin/dashboard' className='text-white hover:text-yellow-300 transition-colors duration-300'>
                             Admin Dashboard
@@ -57,6 +63,11 @@ const Navbar = () => {
                     {user && user.role === 'user' && (
                         <Link to='/pan-submission' className='text-white hover:text-yellow-300 transition-colors duration-300'>
                             PAN Submission
+                        </Link>
+                    )}
+                    {user && (user.role === 'subadmin' || user.role === 'admin') && (
+                        <Link to='/chat' className='text-white hover:text-yellow-300 transition-colors duration-300'>
+                            Chat
                         </Link>
                     )}
 

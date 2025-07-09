@@ -27,7 +27,19 @@ const Login = () => {
         try {
             dispatch(setLoading(true));
             
-            const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/user/login`, input, {
+            // Choose endpoint based on role
+            let endpoint;
+            let requestData;
+            
+            if (input.role === 'subadmin') {
+                endpoint = `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/subadmin/login`;
+                requestData = { email: input.email, password: input.password }; // No role field for subadmin
+            } else {
+                endpoint = `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/user/login`;
+                requestData = input; // Include role for user/admin
+            }
+            
+            const response = await axios.post(endpoint, requestData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -45,8 +57,10 @@ const Login = () => {
                 // Navigate based on user role
                 if (userData.role === 'admin') {
                     navigate('/admin/dashboard');
+                } else if (userData.role === 'subadmin') {
+                    navigate('/subadmin/dashboard');
                 } else {
-                    navigate('/');
+                    navigate('/pan-submission');
                 }
             } else {
                 dispatch(setError(response.data.message || 'Login failed'));
@@ -118,6 +132,7 @@ const Login = () => {
                         >
                             <option value='user'>User</option>
                             <option value='admin'>Admin</option>
+                            <option value='subadmin'>SubAdmin</option>
                         </select>
                     </div>
                     
@@ -135,12 +150,6 @@ const Login = () => {
                         Don't have an account?{' '}
                         <Link to='/signup' className='text-yellow-500 hover:text-yellow-600 font-medium'>
                             Sign up
-                        </Link>
-                    </p>
-                    <p className='text-gray-600 mt-2'>
-                        SubAdmin?{' '}
-                        <Link to='/subadmin/login' className='text-purple-500 hover:text-purple-600 font-medium'>
-                            SubAdmin Login
                         </Link>
                     </p>
                 </div>

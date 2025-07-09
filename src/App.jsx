@@ -9,6 +9,8 @@ import PanSubmission from './components/PanSubmission';
 import AdminDashboard from './components/AdminDashboard';
 import SubAdminManagement from './components/SubAdminManagement';
 import SubAdminDashboard from './components/SubAdminDashboard';
+import Chat from './components/Chat';
+import { SocketProvider } from './contexts/SocketContext';
 import useAuth from './hooks/useAuth';
 
 // Error Boundary Component
@@ -19,10 +21,10 @@ const ErrorBoundary = ({ error }) => {
         <h1 className="text-2xl font-bold text-red-600 mb-4">Something went wrong!</h1>
         <p className="text-gray-600 mb-4">{error?.message || 'An unexpected error occurred'}</p>
         <button 
-          onClick={() => window.location.href = '/'}
+          onClick={() => window.location.reload()}
           className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg"
         >
-          Go to Home
+          Refresh Page
         </button>
       </div>
     </div>
@@ -64,6 +66,11 @@ const router = createBrowserRouter([
     path: '/subadmin/dashboard',
     element: <SubAdminDashboard />,
     errorElement: <ErrorBoundary />
+  },
+  {
+    path: '/chat',
+    element: <Chat />,
+    errorElement: <ErrorBoundary />
   }
 ]);
 
@@ -71,9 +78,11 @@ function AppContent() {
   useAuth(); // Check authentication on app load
   
   return (
-    <div>
-      <RouterProvider router={router} />
-    </div>
+    <SocketProvider>
+      <div>
+        <RouterProvider router={router} />
+      </div>
+    </SocketProvider>
   );
 }
 

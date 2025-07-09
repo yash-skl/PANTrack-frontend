@@ -14,13 +14,7 @@ const SubAdminDashboard = () => {
     const [selectedImage, setSelectedImage] = useState({ url: '', title: '' });
     const [showImageModal, setShowImageModal] = useState(false);
 
-    // Filter states
-    const [filters, setFilters] = useState({
-        status: 'all',
-        user: 'all',
-        startDate: '',
-        endDate: ''
-    });
+
 
     const { user } = useSelector(store => store.auth);
     const navigate = useNavigate();
@@ -121,78 +115,7 @@ const SubAdminDashboard = () => {
         };
     };
 
-    // Get unique users for filter dropdown
-    const getUniqueUsers = () => {
-        if (!submissions || submissions.length === 0) return [];
-        
-        const users = submissions
-            .filter(submission => submission.user)
-            .map(submission => ({
-                id: submission.user._id,
-                name: submission.user.name,
-                email: submission.user.email
-            }));
-        
-        const uniqueUsers = users.filter((user, index, self) => 
-            index === self.findIndex(u => u.id === user.id)
-        );
-        
-        return uniqueUsers;
-    };
 
-    // Filter submissions
-    const getFilteredSubmissions = () => {
-        if (!submissions || submissions.length === 0) return [];
-        
-        let filtered = [...submissions];
-
-        if (filters.status !== 'all') {
-            filtered = filtered.filter(submission => submission.status === filters.status);
-        }
-
-        if (filters.user !== 'all') {
-            filtered = filtered.filter(submission => submission.user?._id === filters.user);
-        }
-
-        if (filters.startDate) {
-            const startDate = new Date(filters.startDate);
-            startDate.setHours(0, 0, 0, 0);
-            filtered = filtered.filter(submission => {
-                const submissionDate = new Date(submission.submissionDate);
-                return submissionDate >= startDate;
-            });
-        }
-
-        if (filters.endDate) {
-            const endDate = new Date(filters.endDate);
-            endDate.setHours(23, 59, 59, 999);
-            filtered = filtered.filter(submission => {
-                const submissionDate = new Date(submission.submissionDate);
-                return submissionDate <= endDate;
-            });
-        }
-
-        return filtered;
-    };
-
-    // Handle filter changes
-    const handleFilterChange = (e) => {
-        const { name, value } = e.target;
-        setFilters(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    // Reset filters
-    const resetFilters = () => {
-        setFilters({
-            status: 'all',
-            user: 'all',
-            startDate: '',
-            endDate: ''
-        });
-    };
 
     // View image
     const viewImage = (imageUrl, title) => {
@@ -241,8 +164,6 @@ const SubAdminDashboard = () => {
     }
 
     const stats = calculateStats(submissions);
-    const filteredSubmissions = getFilteredSubmissions();
-    const uniqueUsers = getUniqueUsers();
 
     return (
         <div className='min-h-screen bg-gray-50'>
@@ -301,84 +222,7 @@ const SubAdminDashboard = () => {
                     </div>
                 </div>
 
-                {/* Filters */}
-                <div className='bg-white p-6 rounded-lg shadow mb-6'>
-                    <h2 className='text-lg font-semibold text-gray-800 mb-4'>Filter Submissions</h2>
-                    <div className='grid grid-cols-1 md:grid-cols-5 gap-4'>
-                        <div>
-                            <label className='block text-sm font-medium text-gray-700 mb-2'>Status</label>
-                            <select
-                                name='status'
-                                value={filters.status}
-                                onChange={handleFilterChange}
-                                className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-                            >
-                                <option value='all'>All Statuses</option>
-                                <option value='pending'>Pending</option>
-                                <option value='reviewed'>Reviewed</option>
-                                <option value='approved'>Approved</option>
-                                <option value='rejected'>Rejected</option>
-                            </select>
-                        </div>
 
-                        <div>
-                            <label className='block text-sm font-medium text-gray-700 mb-2'>User</label>
-                            <select
-                                name='user'
-                                value={filters.user}
-                                onChange={handleFilterChange}
-                                className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-                            >
-                                <option value='all'>All Users</option>
-                                {uniqueUsers.map(user => (
-                                    <option key={user.id} value={user.id}>
-                                        {user.name} ({user.email})
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className='block text-sm font-medium text-gray-700 mb-2'>Start Date</label>
-                            <input
-                                type='date'
-                                name='startDate'
-                                value={filters.startDate}
-                                onChange={handleFilterChange}
-                                className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-                            />
-                        </div>
-
-                        <div>
-                            <label className='block text-sm font-medium text-gray-700 mb-2'>End Date</label>
-                            <input
-                                type='date'
-                                name='endDate'
-                                value={filters.endDate}
-                                onChange={handleFilterChange}
-                                className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-                            />
-                        </div>
-
-                        <div className='flex items-end'>
-                            <Button
-                                onClick={resetFilters}
-                                variant='outline'
-                                className='w-full px-4 py-2 rounded-lg'
-                            >
-                                Reset Filters
-                            </Button>
-                        </div>
-                    </div>
-                    
-                    <div className='mt-4 text-sm text-gray-600'>
-                        Showing {filteredSubmissions.length} of {submissions.length} submissions
-                        {filters.status !== 'all' && ` • Status: ${filters.status}`}
-                        {filters.user !== 'all' && ` • User: ${uniqueUsers.find(u => u.id === filters.user)?.name}`}
-                        {filters.startDate && ` • From: ${new Date(filters.startDate).toLocaleDateString()}`}
-                        {filters.endDate && ` • To: ${new Date(filters.endDate).toLocaleDateString()}`}
-                    </div>
-                </div>
 
                 {/* Submissions Table */}
                 <div className='bg-white rounded-lg shadow overflow-hidden'>
@@ -390,7 +234,7 @@ const SubAdminDashboard = () => {
                         <div className='p-8 text-center'>
                             <div className='text-gray-500'>Loading submissions...</div>
                         </div>
-                    ) : !filteredSubmissions || filteredSubmissions.length === 0 ? (
+                    ) : !submissions || submissions.length === 0 ? (
                         <div className='p-8 text-center'>
                             <div className='text-gray-500'>No submissions found</div>
                         </div>
@@ -425,7 +269,7 @@ const SubAdminDashboard = () => {
                                     </tr>
                                 </thead>
                                 <tbody className='bg-white divide-y divide-gray-200'>
-                                    {filteredSubmissions.map((submission) => (
+                                    {submissions.map((submission) => (
                                         <tr key={submission._id} className='hover:bg-gray-50'>
                                             <td className='px-6 py-4 whitespace-nowrap'>
                                                 <div className='text-sm font-medium text-gray-900'>
