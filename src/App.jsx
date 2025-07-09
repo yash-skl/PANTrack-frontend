@@ -5,7 +5,6 @@ import { store } from './redux/store'
 import Home from './components/Home';
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
-import SubAdminLogin from './components/auth/SubAdminLogin';
 import PanSubmission from './components/PanSubmission';
 import AdminDashboard from './components/AdminDashboard';
 import SubAdminManagement from './components/SubAdminManagement';
