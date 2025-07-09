@@ -46,11 +46,6 @@ const router = createBrowserRouter([
     errorElement: <ErrorBoundary />
   },
   {
-    path: '/subadmin/login',
-    element: <SubAdminLogin />,
-    errorElement: <ErrorBoundary />
-  },
-  {
     path: '/pan-submission',
     element: <PanSubmission />,
     errorElement: <ErrorBoundary />
