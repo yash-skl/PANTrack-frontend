@@ -15,22 +15,26 @@ import storage from 'redux-persist/lib/storage';
 import { combineReducers } from "redux";
 
 
-// Define the persistConfig
-const persistConfig = {
-  key: 'root', 
-  storage,    
-  whitelist: ['auth', 'pan'], 
+
+const authPersistConfig = {
+  key: 'auth',
+  storage,
+  blacklist: ['loading', 'error'], 
+};
+
+
+const panPersistConfig = {
+  key: 'pan',
+  storage,
 };
 
 const rootReducer = combineReducers({
-  auth: authSlice,
-  pan: panSlice,
+  auth: persistReducer(authPersistConfig, authSlice),
+  pan: persistReducer(panPersistConfig, panSlice),
 });
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
 const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

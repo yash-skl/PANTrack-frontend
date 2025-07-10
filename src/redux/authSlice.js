@@ -16,12 +16,16 @@ const authSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    resetLoading: (state) => {
+      state.loading = false;
+    },
     setUser: (state, action) => {
         console.log("Setting User in Redux:", action.payload);
         state.user = action.payload || null;
         state.admin = null;
         state.subAdmin = null;
         state.error = null;
+        state.loading = false; 
       },
       
     setAdmin: (state, action) => {
@@ -29,15 +33,18 @@ const authSlice = createSlice({
       state.admin = action.payload || null;
       state.user = null;
       state.error = null;
+      state.loading = false; 
     },    
     setSubAdmin: (state, action) => {
       console.log("Setting SubAdmin in Redux:", action.payload);
       state.subAdmin = action.payload || null;
       state.user = null;
       state.error = null;
+      state.loading = false; 
     },
     setError: (state, action) => {
       state.error = action.payload;
+      state.loading = false; 
     },
     setLogout: (state) => {
       console.log("Logging out...");
@@ -50,5 +57,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setLoading, setUser, setError, setLogout, setAdmin, setSubAdmin } = authSlice.actions;
+export const { setLoading, resetLoading, setUser, setError, setLogout, setAdmin, setSubAdmin } = authSlice.actions;
 export default authSlice.reducer;
